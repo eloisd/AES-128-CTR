@@ -8,16 +8,22 @@ You will need node.js
 
 ## Ubuntu
 
-```$ sudo apt update```
-```$ sudo apt install Node.js```
+```
+$ sudo apt update
+$ sudo apt install Node.js
+```
 
 ## MacOS
 
 ### Using Homebrew
-```$ brew install node```
+```
+$ brew install node
+```
 
 ## Windows
 
 ### Using Winget
-```$ winget install OpenJS.NodeJS```
+```
+$ winget install OpenJS.NodeJS
+```
 
