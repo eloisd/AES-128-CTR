@@ -4,7 +4,7 @@ The main goal of this projet is to encrypt messages using AES (Advanced Encrypti
 
 # Installation
 
-You will need node.js  
+You will need node.js, here are the command to run in your terminal.
 
 ## Ubuntu
 
@@ -18,6 +18,10 @@ $ sudo apt install Node.js
 ### Using Homebrew
 ```
 $ brew install node
+```
+If you do not have brew run this before and go drink a coffee, it will take some time. 
+```
+$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
 ## Windows
