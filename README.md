@@ -2,7 +2,7 @@
 
 The main goal of this projet is to encrypt messages using AES (Advanced Encryption Standard) with a key and an iv (Initial Vector) of 128 bits. 
 
-The thing which is [color=#26B260]**interesting**[/color] is that this code [color=#26B260]**does not use any package**[/color].
+The thing which is [color=text-danger]**interesting**[/color] is that this code [color=text-danger]**does not use any package**[/color].
 
 # Installation
 
