@@ -7,14 +7,13 @@ The thing which is <span class="text-danger">**interesting**</span> is that this
 # Installation
 
 ## Step 1
-You will need node.js, here are the command to run in your terminal.
+You will need node.js et npm, here are the command to run in your terminal.
 Here are some ways to do it manualy. 
 
 ### Ubuntu
 
 ```
-$ sudo apt update
-$ sudo apt install Node.js
+$ curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - sudo apt install -y nodejs
 ```
 
 ### MacOS
@@ -50,7 +49,7 @@ $ cd AES-128-CTR
 ## Step 4
 Install the 'readline' package
 ```
-$ install.packages('readline')
+$ npm install readline
 ```
 
 ## Step 5
