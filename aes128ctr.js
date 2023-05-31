@@ -1,4 +1,4 @@
-
+const readline = require('readline');
 
 class Aes {
 
@@ -23,7 +23,6 @@ class Aes {
         for (let i = 0; i < 4 * Nb; i++) state[i % 4][Math.floor(i / 4)] = input[i];
 
         state = Aes.addRoundKey(state, w, 0, Nb);
-        // console.log('s0', state);
 
         for (let round = 1; round < Nr; round++) {
             state = Aes.subBytes(state, Nb);
@@ -31,13 +30,9 @@ class Aes {
             state = Aes.mixColumns(state, Nb);
             state = Aes.addRoundKey(state, w, round, Nb);
         }
-        // console.log('s2', state);
         state = Aes.subBytes(state, Nb);
-        // console.log('s3', state);
         state = Aes.shiftRows(state, Nb);
-        // console.log('s4', state);
         state = Aes.addRoundKey(state, w, Nr, Nb);
-        console.log('s5', state);
 
         const output = new Array(4 * Nb); // convert state to 1-d array before returning [§3.4]
         for (let i = 0; i < 4 * Nb; i++) output[i] = state[i % 4][Math.floor(i / 4)];
@@ -53,7 +48,6 @@ class Aes {
      * @returns {number[][]} Expanded key schedule as 2D byte-array (Nr+1 × Nb bytes).
      */
     static keyExpansion(key) {
-        console.log('k', key)
         const Nb = 4; // block size (in words): no of columns in state (fixed at 4 for AES)
         const Nk = key.length / 4; // key length (in words): 4/6/8 for 128/192/256-bit keys
         const Nr = Nk + 6; // no of rounds: 10/12/14 for 128/192/256-bit keys
@@ -217,12 +211,12 @@ Aes.rCon = [
 
 
 
-String.prototype.encrypt = function (key, bits=256) {
-	return AesCtr.encrypt(this, key, bits)
+String.prototype.encrypt = function (key, bits = 256) {
+    return AesCtr.encrypt(this, key, bits)
 };
 
-String.prototype.decrypt = function (key, bits=256) {
-	return AesCtr.decrypt(this, key, bits)
+String.prototype.decrypt = function (key, bits = 256) {
+    return AesCtr.decrypt(this, key, bits)
 };
 
 // const k = '9AD247ED645BD49A232AB03DC2058E30'
@@ -231,11 +225,11 @@ const x = [24, 125, 60, 246, 2];
 const x2 = [175, 30, 247, 154, 25, 92, 29, 225, 210, 148, 227, 206, 52, 7, 30]
 const k = [154, 210, 71, 237, 100, 91, 212, 154, 35, 42, 176, 61, 194, 5, 142, 48]
 const k2 = []
-const iv = [46, 2, 0, 0, 55, 129, 7, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0]
-const xtest = [231, 31, 173, 175, 130, 44, 23,  50, 133, 167, 70, 44,  93, 162, 209, 232]
+const iv_dec_list = [46, 2, 0, 0, 55, 129, 7, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0]
+const xtest = [231, 31, 173, 175, 130, 44, 23, 50, 133, 167, 70, 44, 93, 162, 209, 232]
 
-function AesModeCTR (message, key, iv){
-    const s = Aes.cipher(iv,Aes.keyExpansion(key))
+function AesModeCTR(message, key, iv) {
+    const s = Aes.cipher(iv, Aes.keyExpansion(key))
     var y = new Array(message.length);
 
     for (let i = 0; i < message.length; i++) {
@@ -243,4 +237,68 @@ function AesModeCTR (message, key, iv){
     }
     return y;
 }
-console.log(AesModeCTR (x, k, iv))
+
+/******************************************************************/
+
+function hexToBytes(hex) {
+    const bytes = [];
+    for (let i = 0; i < hex.length; i += 2) {
+        const byte = parseInt(hex.substr(i, 2), 16);
+        bytes.push(byte);
+    }
+    return bytes;
+}
+
+function bytesToHex(bytes) {
+    let hexString = '';
+    for (let i = 0; i < bytes.length; i++) {
+        const hex = bytes[i].toString(16).padStart(2, '0');
+        hexString += hex;
+    }
+    return hexString;
+}
+
+function bytesToText(bytes) {
+    let text = '';
+    for (let i = 0; i < bytes.length; i++) {
+        text += String.fromCharCode(bytes[i]);
+    }
+    return text;
+}
+
+function getUserInput(promptText) {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    return new Promise((resolve) => {
+        rl.question(promptText, (userInput) => {
+            rl.close();
+            resolve(userInput);
+        });
+    });
+}
+
+
+async function main() {
+    const key_string = await getUserInput('Give me the key of the chest: \n');
+    const key_list = hexToBytes(key_string);
+
+    const iv_string = await getUserInput('Then, give me the date of yesterday and the date of tomorrow: \n');
+    const iv_list = hexToBytes(iv_string);
+
+    const message_string = await getUserInput('Finally, what is the message to encrypt ? \n');
+    const message_list = hexToBytes(message_string);
+
+    const encrypted = AesModeCTR(message_list, key_list, iv_list)
+
+    console.log("Here is the answer :\n\n\thex\t",
+        bytesToHex(encrypted),
+        "\n\ttxt\t",
+        bytesToText(encrypted),
+        "\n");
+}
+
+main();
+
